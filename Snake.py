@@ -16,7 +16,6 @@ snake_x = [200, 200, 200]
 snake_y = [200, 190, 180]
 next_x = 200
 next_y = 200
-snake_length = 3
 is_game_over = False
 block_size = 10
 move_direction = "up"
@@ -24,6 +23,7 @@ is_snack_present = False
 game_over_font = pygame.font.Font('freesansbold.ttf', 32)
 snack_x = random.randint(0, 40) * 10
 snack_y = random.randint(0, 40) * 10
+grow = False
 
 
 def game_over():
@@ -37,31 +37,38 @@ def snake():
     if next_x == snack_x and next_y == snack_y:
         is_snack_present = False
 
-    for i in range(snake_length):
+    for i in range(len(snake_x)):
         pygame.draw.rect(screen, (0, 255, 0), Rect(snake_x[i], snake_y[i], block_size, block_size))
 
 
 def move_snake():
-    global is_game_over
+    global snake_x, snake_y, is_game_over, grow
 
     # Move snake or crash
     if 0 <= next_x < 400:
+        if grow:
+            snake_x.append(0)
+
         # Shift array right to move snake
-        snake_x[0:1] = [snake_x.pop(), snake_x[0]]
+        snake_x = [snake_x[-1]] + snake_x[:-1]
         snake_x[0] = next_x
     else:
         is_game_over = True
 
     if 0 <= next_y < 400:
+        if grow:
+            snake_y.append(0)
+            grow = False
+
         # Shift array right to move snake
-        snake_y[0:1] = [snake_y.pop(), snake_y[0]]
+        snake_y = [snake_y[-1]] + snake_y[:-1]
         snake_y[0] = next_y
     else:
         is_game_over = True
 
 
 def prepare_next_move():
-    global next_x, next_y
+    global next_x, next_y, grow
 
     # Next move
     if move_direction == "left":
@@ -73,6 +80,9 @@ def prepare_next_move():
     elif move_direction == "down":
         next_y += block_size
 
+    if next_x == snack_x and next_y == snack_y:
+        grow = True
+
 
 def snack():
     global is_snack_present, snack_x, snack_y
@@ -80,7 +90,6 @@ def snack():
     if not is_snack_present:
         snack_x = random.randint(0, 39) * 10
         snack_y = random.randint(0, 39) * 10
-        print("Snack coordinates, ({}, {})".format(snack_x, snack_y))
         is_snack_present = True
 
     pygame.draw.rect(screen, (255, 0, 0), Rect(snack_x, snack_y, block_size, block_size))
