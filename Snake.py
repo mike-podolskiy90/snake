@@ -78,8 +78,9 @@ def snack():
     global is_snack_present, snack_x, snack_y
 
     if not is_snack_present:
-        snack_x = random.randint(0, 40) * 10
-        snack_y = random.randint(0, 40) * 10
+        snack_x = random.randint(0, 39) * 10
+        snack_y = random.randint(0, 39) * 10
+        print("Snack coordinates, ({}, {})".format(snack_x, snack_y))
         is_snack_present = True
 
     pygame.draw.rect(screen, (255, 0, 0), Rect(snack_x, snack_y, block_size, block_size))
