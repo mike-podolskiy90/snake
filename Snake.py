@@ -1,5 +1,6 @@
 import pygame
 import time
+import random
 from pygame import Rect
 
 # Initialize pygame
@@ -11,15 +12,18 @@ screen = pygame.display.set_mode((400, 400))
 # Title
 pygame.display.set_caption("Snake")
 
-snake_x = [200]
-snake_y = [200]
+snake_x = [200, 200, 200]
+snake_y = [200, 190, 180]
 next_x = 200
 next_y = 200
-snake_length = 1
+snake_length = 3
 is_game_over = False
 block_size = 10
 move_direction = "up"
+is_snack_present = False
 game_over_font = pygame.font.Font('freesansbold.ttf', 32)
+snack_x = random.randint(0, 40) * 10
+snack_y = random.randint(0, 40) * 10
 
 
 def game_over():
@@ -28,6 +32,11 @@ def game_over():
 
 
 def snake():
+    global is_snack_present
+
+    if next_x == snack_x and next_y == snack_y:
+        is_snack_present = False
+
     for i in range(snake_length):
         pygame.draw.rect(screen, (0, 255, 0), Rect(snake_x[i], snake_y[i], block_size, block_size))
 
@@ -37,11 +46,15 @@ def move_snake():
 
     # Move snake or crash
     if 0 <= next_x < 400:
+        # Shift array right to move snake
+        snake_x[0:1] = [snake_x.pop(), snake_x[0]]
         snake_x[0] = next_x
     else:
         is_game_over = True
 
     if 0 <= next_y < 400:
+        # Shift array right to move snake
+        snake_y[0:1] = [snake_y.pop(), snake_y[0]]
         snake_y[0] = next_y
     else:
         is_game_over = True
@@ -59,6 +72,17 @@ def prepare_next_move():
         next_y -= block_size
     elif move_direction == "down":
         next_y += block_size
+
+
+def snack():
+    global is_snack_present, snack_x, snack_y
+
+    if not is_snack_present:
+        snack_x = random.randint(0, 40) * 10
+        snack_y = random.randint(0, 40) * 10
+        is_snack_present = True
+
+    pygame.draw.rect(screen, (255, 0, 0), Rect(snack_x, snack_y, block_size, block_size))
 
 
 # Game loop
@@ -92,5 +116,8 @@ while running:
 
     # Snake
     snake()
+
+    # Snack
+    snack()
 
     pygame.display.update()
