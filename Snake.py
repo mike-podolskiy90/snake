@@ -70,24 +70,22 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
+        # Catch button pressed and store snake's movement direction
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                move_direction = "left"
+            elif event.key == pygame.K_RIGHT:
+                move_direction = "right"
+            elif event.key == pygame.K_UP:
+                move_direction = "up"
+            elif event.key == pygame.K_DOWN:
+                move_direction = "down"
+
     # Sleep to slower snake's speed
     time.sleep(.100)
 
     if not is_game_over:
-        for event in pygame.event.get():
-            # Catch button pressed and store snake's movement direction
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
-                    move_direction = "left"
-                elif event.key == pygame.K_RIGHT:
-                    move_direction = "right"
-                elif event.key == pygame.K_UP:
-                    move_direction = "up"
-                elif event.key == pygame.K_DOWN:
-                    move_direction = "down"
-
         prepare_next_move()
-
         move_snake()
     else:
         game_over()
