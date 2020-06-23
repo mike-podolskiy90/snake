@@ -13,9 +13,9 @@ screen = pygame.display.set_mode((400, 400))
 pygame.display.set_caption("Snake")
 
 snake_x = [200, 200, 200]
-snake_y = [200, 190, 180]
+snake_y = [180, 190, 200]
 next_x = 200
-next_y = 200
+next_y = 180
 is_game_over = False
 block_size = 10
 move_direction = "up"
@@ -41,26 +41,33 @@ def snake():
         pygame.draw.rect(screen, (0, 255, 0), Rect(snake_x[i], snake_y[i], block_size, block_size))
 
 
+def is_not_out_of_border(x, y):
+    return 0 <= x < 400 and 0 <= y < 400
+
+
+def is_not_eat_itself(x, y):
+    global snake_x, snake_y
+
+    for i in range(len(snake_x)):
+        if snake_x[i] == x and snake_y[i] == y:
+            return False
+
+    return True
+
+
 def move_snake():
     global snake_x, snake_y, is_game_over, grow
 
     # Move snake or crash
-    if 0 <= next_x < 400:
+    if is_not_out_of_border(next_x, next_y) and is_not_eat_itself(next_x, next_y):
         if grow:
             snake_x.append(0)
-
-        # Shift array right to move snake
-        snake_x = [snake_x[-1]] + snake_x[:-1]
-        snake_x[0] = next_x
-    else:
-        is_game_over = True
-
-    if 0 <= next_y < 400:
-        if grow:
             snake_y.append(0)
             grow = False
 
         # Shift array right to move snake
+        snake_x = [snake_x[-1]] + snake_x[:-1]
+        snake_x[0] = next_x
         snake_y = [snake_y[-1]] + snake_y[:-1]
         snake_y[0] = next_y
     else:
