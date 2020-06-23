@@ -102,6 +102,21 @@ def snack():
     pygame.draw.rect(screen, (255, 0, 0), Rect(snack_x, snack_y, block_size, block_size))
 
 
+def restart_game():
+    global snake_x, snake_y, next_x, next_y, is_game_over, move_direction, is_snack_present, snack_x, snack_y, grow
+
+    snake_x = [200, 200, 200]
+    snake_y = [180, 190, 200]
+    next_x = 200
+    next_y = 180
+    is_game_over = False
+    move_direction = "up"
+    is_snack_present = False
+    snack_x = random.randint(0, 40) * 10
+    snack_y = random.randint(0, 40) * 10
+    grow = False
+
+
 # Game loop
 running = True
 while running:
@@ -114,6 +129,8 @@ while running:
         # Catch button pressed and store snake's movement direction
         # Make sure direction is not opposite otherwise ignore
         if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_F2:
+                restart_game()
             if event.key == pygame.K_LEFT:
                 if move_direction != "right":
                     move_direction = "left"
