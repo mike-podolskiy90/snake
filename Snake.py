@@ -105,15 +105,20 @@ while running:
             running = False
 
         # Catch button pressed and store snake's movement direction
+        # Make sure direction is not opposite otherwise ignore
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                move_direction = "left"
+                if move_direction != "right":
+                    move_direction = "left"
             elif event.key == pygame.K_RIGHT:
-                move_direction = "right"
+                if move_direction != "left":
+                    move_direction = "right"
             elif event.key == pygame.K_UP:
-                move_direction = "up"
+                if move_direction != "down":
+                    move_direction = "up"
             elif event.key == pygame.K_DOWN:
-                move_direction = "down"
+                if move_direction != "up":
+                    move_direction = "down"
 
     # Sleep to slower snake's speed
     time.sleep(.100)
